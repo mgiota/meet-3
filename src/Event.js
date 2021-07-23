@@ -1,39 +1,41 @@
 import React, { Component } from "react";
 
+import { mockData } from "./mock-data";
+
 class Event extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            expanded: false,
-        }
+  state = {
+    show: false,
+  };
 
-        this.toggleExpanded = this.toggleExpanded.bind(this);
-    }
+  handleButton = () => {
+    this.setState((prevState) => ({ show: !prevState.show }));
+  };
 
-    toggleExpanded() {
-        this.setState({
-            expanded: !this.state.expanded
-        });
-    }
+  render() {
+    let event = this.props.event;
 
-    render() {
-        return (
-            <div>
-                <h2 className="event-title">{this.props.title}</h2>
-                <div className="basic-info">
-                    <span>{this.props.startdate}</span>
-                    <span>{this.props.location}</span>
-                </div>
-                <button
-                    className="show-details"
-                    onClick={this.toggleExpanded}
-                >Show Details</button>
-                <div
-                    className={`row ${this.state.expanded ? 'expanded' : 'normal'}`}
-                ></div>
-            </div>
-        )
-    }
+    return (
+      <div className="Event">
+        <h1 className="EventSummary">{event.summary}</h1>
+        <h2 className="EventLocation">{event.location}</h2>
+        <h3 className="EventDate">
+          start: {event.start.dateTime} - Time Zone: {event.start.timeZone}
+        </h3>
+        {this.state.show === true && (
+          <p className="EventDetails">{event.description}</p>
+        )}
+        {this.state.show === false && (
+          <button className="showMore" onClick={() => this.handleButton()}>
+            Show details
+          </button>
+        )}
+        {this.state.show === true && (
+          <button className="showLess" onClick={() => this.handleButton()}>
+            hide details
+          </button>
+        )}
+      </div>
+    );
+  }
 }
-
 export default Event;
