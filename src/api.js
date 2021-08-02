@@ -54,46 +54,91 @@ const removeQuery = () => {
 };
 
 const getToken = async (code) => {
-  const encodeCode = encodeURIComponent(code);
-  const { access_token } = await axios.get(
-    'https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/token' + '/' + encodeCode
-  )
-    .then((res) => {
-      return res.data.tokens.access_token;
-    })
-    .catch((error) => error);
+	const encodeCode = encodeURIComponent(code);
+	const access_token = await axios
+		.get(
+			'https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/token' +
+				'/' +
+				encodeCode
+		)
+		.then((res) => {
+			return res.data.tokens.access_token;
+		})
+		.catch((error) => error);
+	console.log(access_token);
+	access_token && localStorage.setItem('access_token', access_token);
 
-  access_token && localStorage.setItem("access_token", access_token);
-
-  return access_token;
+	return access_token;
 };
+
+// const getToken = async (code) => {
+//   const encodeCode = encodeURIComponent(code);
+//   const { access_token } = await axios.get(
+//     'https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/token' + '/' + encodeCode
+//   )
+//     .then((res) => {
+//       return res.data.tokens.access_token;
+//     })
+//     .catch((error) => error);
+
+//   access_token && localStorage.setItem("access_token", access_token);
+
+//   return access_token;
+// };
 
 export const getEvents = async () => {
-  NProgress.start();
-
-  if (window.location.href.startsWith('http://localhost')) {
-    NProgress.done();
-    return mockData;
-  }
-
-  const token = await getAccessToken();
-
-  if (token) {
-    removeQuery();
-    const url = 'https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/get-events' + '/' + token;
-    const result = await axios.get(url);
-    if (result.data) {
-      var locations = extractLocations(result.data.events);
-      localStorage.setItem("lastEvents", JSON.stringify(result.data));
-      localStorage.setItem("locations", JSON.stringify(locations));
-    }
-    NProgress.done();
-    return result.data.events;
-  }
+	NProgress.start();
+	if (window.location.href.startsWith('http://localhost')) {
+		NProgress.done();
+		return mockData;
+	}
+	if (!navigator.onLine) {
+		const data = localStorage.getItem('lastEvents');
+		NProgress.done();
+		return data ? JSON.parse(data).events : [];
+	}
+	const token = await getAccessToken();
+	if (token) {
+		removeQuery();
+		const result = await axios.get(
+			`https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/get-events/${token}`
+		);
+		if (result.data.events) {
+			var locations = extractLocations(result.data.events);
+			localStorage.setItem('lastEvents', JSON.stringify(result.data));
+			localStorage.setItem('locations', JSON.stringify(locations));
+		}
+		NProgress.done();
+		return result.data.events;
+	}
 };
 
- export const extractLocations = (events) => {
-    var extractLocations = events.map((event) => event.location);
-    var locations = [...new Set(extractLocations)];
-    return locations;
-  };
+// export const getEvents = async () => {
+//   NProgress.start();
+
+//   if (window.location.href.startsWith('http://localhost')) {
+//     NProgress.done();
+//     return mockData;
+//   }
+
+//   const token = await getAccessToken();
+
+//   if (token) {
+//     removeQuery();
+//     const url = 'https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/get-events' + '/' + token;
+//     const result = await axios.get(url);
+//     if (result.data) {
+//       var locations = extractLocations(result.data.events);
+//       localStorage.setItem("lastEvents", JSON.stringify(result.data));
+//       localStorage.setItem("locations", JSON.stringify(locations));
+//     }
+//     NProgress.done();
+//     return result.data.events;
+//   }
+// };
+
+//  export const extractLocations = (events) => {
+//     var extractLocations = events.map((event) => event.location);
+//     var locations = [...new Set(extractLocations)];
+//     return locations;
+//   };
