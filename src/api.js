@@ -86,6 +86,14 @@ const getToken = async (code) => {
 //   return access_token;
 // };
 
+export const extractLocations = (events) => {
+	let extractLocations = events.map((event) => {
+		return event.location;
+	});
+	var locations = [...new Set(extractLocations)];
+	return locations;
+};
+
 export const getEvents = async () => {
 	NProgress.start();
 	if (window.location.href.startsWith('http://localhost')) {
