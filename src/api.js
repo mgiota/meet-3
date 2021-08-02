@@ -27,22 +27,7 @@ export const getAccessToken = async () => {
     return code && getAccessToken(code);
   }
   return accessToken;
-}
-
-const getToken = async (code) => {
-  const encodeCode = encodeURIComponent(code);
-  const { access_token } = await fetch(
-    'https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/token' + '/' + encodeCode
-  )
-    .then((res) => {
-      return res.json();
-    })
-    .catch((error) => error);
-
-  access_token && localStorage.setItem("access_token", access_token);
-
-  return access_token;
-}
+};
 
 const checkToken = async (accessToken) => {
   const result = await fetch(
@@ -52,7 +37,7 @@ const checkToken = async (accessToken) => {
     .catch((error) => error.json());
   
   return result;
-}
+};
 
 const removeQuery = () => {
   if (window.history.pushState && window.location.pathname) {
@@ -66,6 +51,21 @@ const removeQuery = () => {
     newurl = window.location.protocol + "//" + window.location.host;
     window.history.pushState("", "", newurl);
   }
+};
+
+const getToken = async (code) => {
+  const encodeCode = encodeURIComponent(code);
+  const { access_token } = await axios.get(
+    'https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/token' + '/' + encodeCode
+  )
+    .then((res) => {
+      return res.data.tokens.access_token;
+    })
+    .catch((error) => error);
+
+  access_token && localStorage.setItem("access_token", access_token);
+
+  return access_token;
 };
 
 export const getEvents = async () => {
