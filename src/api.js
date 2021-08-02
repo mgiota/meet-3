@@ -55,7 +55,7 @@ const removeQuery = () => {
 
 const getToken = async (code) => {
 	const encodeCode = encodeURIComponent(code);
-	const access_token = await axios
+	const { access_token } = await axios
 		.get(
 			'https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/token' +
 				'/' +
