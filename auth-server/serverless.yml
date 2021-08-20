@@ -24,6 +24,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
+  region: us-east-1
   timeout: 60 # optional, in seconds, default is 6
   environment:
     CLIENT_ID: ${file(config.json):CLIENT_ID}
