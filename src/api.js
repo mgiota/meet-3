@@ -21,6 +21,24 @@ const checkToken = async (accessToken) => {
 	return result;
   };
 
+const getToken = async (code) => {
+	const encodeCode = encodeURIComponent(code);
+	const { access_token } = await axios
+		.get(
+			'https://29v6oisnpd.execute-api.eu-central-1.amazonaws.com/dev/api/token' +
+				'/' +
+				encodeCode
+		)
+		.then((res) => {
+			return res.data.tokens.access_token;
+		})
+		.catch((error) => error);
+	console.log(access_token);
+	access_token && localStorage.setItem('access_token', access_token);
+
+	return access_token;
+};
+
 export const getAccessToken = async () => {
   const accessToken = localStorage.getItem('access_token');
   const tokenCheck = accessToken && (await checkToken(accessToken));
@@ -51,24 +69,6 @@ const removeQuery = () => {
     newurl = window.location.protocol + "//" + window.location.host;
     window.history.pushState("", "", newurl);
   }
-};
-
-const getToken = async (code) => {
-	const encodeCode = encodeURIComponent(code);
-	const { access_token } = await axios
-		.get(
-			'https://29v6oisnpd.execute-api.eu-central-1.amazonaws.com/dev/api/token' +
-				'/' +
-				encodeCode
-		)
-		.then((res) => {
-			return res.data.tokens.access_token;
-		})
-		.catch((error) => error);
-	console.log(access_token);
-	access_token && localStorage.setItem('access_token', access_token);
-
-	return access_token;
 };
 
 // const getToken = async (code) => {
