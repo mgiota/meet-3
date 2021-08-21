@@ -111,7 +111,7 @@ export const getEvents = async () => {
 		const result = await axios.get(
 			`https://29v6oisnpd.execute-api.eu-central-1.amazonaws.com/dev/api/get-events/${token}`
 		);
-		if (result.data.events) {
+		if (result.data) {
 			var locations = extractLocations(result.data.events);
 			localStorage.setItem('lastEvents', JSON.stringify(result.data));
 			localStorage.setItem('locations', JSON.stringify(locations));
