@@ -11,6 +11,16 @@ import { mockData } from './mock-data';
 import axios from 'axios';
 import NProgress from 'nprogress';
 
+const checkToken = async (accessToken) => {
+	const result = await fetch(
+	  `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
+	)
+	  .then((res) => res.json())
+	  .catch((error) => error.json());
+
+	return result;
+  };
+
 export const getAccessToken = async () => {
   const accessToken = localStorage.getItem('access_token');
   const tokenCheck = accessToken && (await checkToken(accessToken));
@@ -27,16 +37,6 @@ export const getAccessToken = async () => {
     return code && getAccessToken(code);
   }
   return accessToken;
-};
-
-const checkToken = async (accessToken) => {
-  const result = await fetch(
-    `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
-  )
-    .then((res) => res.json())
-    .catch((error) => error.json());
-
-  return result;
 };
 
 const removeQuery = () => {
