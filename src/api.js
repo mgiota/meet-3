@@ -11,6 +11,14 @@ import { mockData } from './mock-data';
 import axios from 'axios';
 import NProgress from 'nprogress';
 
+export const extractLocations = (events) => {
+	let extractLocations = events.map((event) => {
+		return event.location;
+	});
+	var locations = [...new Set(extractLocations)];
+	return locations;
+};
+
 const checkToken = async (accessToken) => {
 	const result = await fetch(
 	  `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
@@ -19,6 +27,20 @@ const checkToken = async (accessToken) => {
 	  .catch((error) => error.json());
 
 	return result;
+  };
+
+  const removeQuery = () => {
+	if (window.history.pushState && window.location.pathname) {
+	  var newurl =
+		window.location.protocol +
+		"//" +
+		window.location.host +
+		window.location.pathname;
+	  window.history.pushState("", "", newurl);
+	} else {
+	  newurl = window.location.protocol + "//" + window.location.host;
+	  window.history.pushState("", "", newurl);
+	}
   };
 
 const getToken = async (code) => {
@@ -57,20 +79,6 @@ export const getAccessToken = async () => {
   return accessToken;
 };
 
-const removeQuery = () => {
-  if (window.history.pushState && window.location.pathname) {
-    var newurl =
-      window.location.protocol +
-      "//" +
-      window.location.host +
-      window.location.pathname;
-    window.history.pushState("", "", newurl);
-  } else {
-    newurl = window.location.protocol + "//" + window.location.host;
-    window.history.pushState("", "", newurl);
-  }
-};
-
 // const getToken = async (code) => {
 //   const encodeCode = encodeURIComponent(code);
 //   const { access_token } = await axios.get(
@@ -85,14 +93,6 @@ const removeQuery = () => {
 
 //   return access_token;
 // };
-
-export const extractLocations = (events) => {
-	let extractLocations = events.map((event) => {
-		return event.location;
-	});
-	var locations = [...new Set(extractLocations)];
-	return locations;
-};
 
 export const getEvents = async () => {
 	NProgress.start();
