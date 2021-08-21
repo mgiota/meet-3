@@ -36,7 +36,7 @@ class App extends Component {
     this.updateEvents(currentCity, eventNumber);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { numberOfEvents } = this.state;
     this.mounted = true;
     getEvents().then((events) => {
