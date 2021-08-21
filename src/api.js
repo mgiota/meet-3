@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * @param {*} events:
  * The following function should be in the "api.js" file.
  * This function takes an events array, then uses map to create a new array with only locations.
@@ -20,7 +20,7 @@ export const getAccessToken = async () => {
     const searchParams = new URLSearchParams(window.location.search);
     const code = await searchParams.get("code");
     if (!code) {
-      const results = await axios.get("https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/get-auth-url");
+      const results = await axios.get("https://29v6oisnpd.execute-api.eu-central-1.amazonaws.com/dev/api/get-auth-url");
       const { authUrl } = results.data;
       return (window.location.href = authUrl);
     }
@@ -35,13 +35,13 @@ const checkToken = async (accessToken) => {
   )
     .then((res) => res.json())
     .catch((error) => error.json());
-  
+
   return result;
 };
 
 const removeQuery = () => {
   if (window.history.pushState && window.location.pathname) {
-    var newurl = 
+    var newurl =
       window.location.protocol +
       "//" +
       window.location.host +
@@ -57,7 +57,7 @@ const getToken = async (code) => {
 	const encodeCode = encodeURIComponent(code);
 	const { access_token } = await axios
 		.get(
-			'https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/token' +
+			'https://29v6oisnpd.execute-api.eu-central-1.amazonaws.com/dev/api/token' +
 				'/' +
 				encodeCode
 		)
@@ -74,7 +74,7 @@ const getToken = async (code) => {
 // const getToken = async (code) => {
 //   const encodeCode = encodeURIComponent(code);
 //   const { access_token } = await axios.get(
-//     'https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/token' + '/' + encodeCode
+//     'https://29v6oisnpd.execute-api.eu-central-1.amazonaws.com/dev/api/token' + '/' + encodeCode
 //   )
 //     .then((res) => {
 //       return res.data.tokens.access_token;
@@ -109,7 +109,7 @@ export const getEvents = async () => {
 	if (token) {
 		removeQuery();
 		const result = await axios.get(
-			`https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/get-events/${token}`
+			`https://29v6oisnpd.execute-api.eu-central-1.amazonaws.com/dev/api/get-events/${token}`
 		);
 		if (result.data.events) {
 			var locations = extractLocations(result.data.events);
@@ -133,7 +133,7 @@ export const getEvents = async () => {
 
 //   if (token) {
 //     removeQuery();
-//     const url = 'https://k28bz31f7i.execute-api.us-east-1.amazonaws.com/dev/api/get-events' + '/' + token;
+//     const url = 'https://29v6oisnpd.execute-api.eu-central-1.amazonaws.com/dev/api/get-events' + '/' + token;
 //     const result = await axios.get(url);
 //     if (result.data) {
 //       var locations = extractLocations(result.data.events);
